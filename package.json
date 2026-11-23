@@ -1,0 +1,10 @@
+{
+  "name": "fab-lab",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Fab Lab: a guided course through a semiconductor fab, plus FabSim, the live simulator it is built on",
+  "scripts": {
+    "test": "node --test test/*.test.js sim/test/*.test.js",
+    "start": "python3 serve.py 8092 ."
+  }
+}

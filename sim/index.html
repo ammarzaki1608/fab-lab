@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FabSim — Semiconductor Fab & Data-Flow Simulator</title>
+<link rel="stylesheet" href="css/style.css?v=11">
+</head>
+<body>
+<header>
+  <div class="brand">
+    <h1>FabSim</h1>
+    <span class="sub">wafer flow · equipment data · process control · yield</span>
+    <a id="courseLink" class="course-link" href="../index.html" hidden>&larr; Course</a>
+  </div>
+  <div class="controls">
+    <button id="btnPlay" class="primary">❚❚ Pause</button>
+    <label class="speed">Speed <input id="speed" type="range" min="0" max="7" step="1" value="3"><span id="speedLbl"></span></label>
+    <label class="tog"><input id="r2r" type="checkbox" checked> R2R control</label>
+    <label class="tog"><input id="autoHold" type="checkbox" checked> Auto-hold on OOC</label>
+    <select id="faultSel"></select>
+    <button id="btnFault">Inject fault</button>
+    <button id="btnPmEtch" title="Wet-clean etch chamber: resets RF-hours">PM Etch</button>
+    <button id="btnPmCmp" title="Replace CMP pad: resets pad-hours">PM CMP</button>
+    <button id="btnReset">Reset</button>
+    <button id="btnFloor" class="primary" title="Physical view: wafers as FOUPs moving between tools">🏭 Fab floor</button>
+  </div>
+</header>
+
+<section class="kpis" id="kpis"></section>
+
+<section class="flow card">
+  <div class="card-h">
+    <h2>Process flow &amp; data flow</h2>
+    <div class="legend">
+      <span><i class="dot lot"></i>Lot (25 wafers)</span>
+      <span><i class="dot MES"></i>MES events</span>
+      <span><i class="dot FDC"></i>FDC sensor traces</span>
+      <span><i class="dot SPC"></i>Metrology → SPC</span>
+      <span><i class="dot R2R"></i>R2R / APC control</span>
+      <span><i class="dot YMS"></i>Test → YMS</span>
+      <span class="hint">Click a step for details</span>
+    </div>
+  </div>
+  <svg id="flow" viewBox="0 0 1240 252" preserveAspectRatio="xMidYMid meet"></svg>
+  <div id="faultsActive" class="faults-active"></div>
+</section>
+
+<main>
+  <section class="card panel">
+    <nav class="tabs" id="tabs">
+      <button data-tab="step" class="on">Step detail</button>
+      <button data-tab="spc">SPC charts</button>
+      <button data-tab="yield">Wafer maps &amp; yield</button>
+      <button data-tab="chambers">Chambers</button>
+      <button data-tab="lot">Lot traveler</button>
+      <button data-tab="data">Dataset</button>
+      <button data-tab="learn">How it works</button>
+    </nav>
+    <div id="tab-step" class="tab on"></div>
+    <div id="tab-spc" class="tab"></div>
+    <div id="tab-yield" class="tab"></div>
+    <div id="tab-chambers" class="tab"></div>
+    <div id="tab-lot" class="tab"></div>
+    <div id="tab-data" class="tab"></div>
+    <div id="tab-learn" class="tab"></div>
+  </section>
+  <aside class="card events">
+    <div class="card-h"><h2>Event stream</h2>
+      <div class="filters" id="evFilters"></div>
+    </div>
+    <ol id="evList"></ol>
+  </aside>
+</main>
+
+<div id="tip" class="tip"></div>
+<script src="../js/handoff.js?v=1"></script>
+<script src="../engine/sim.js?v=1"></script>
+<script src="js/charts.js?v=10"></script>
+<script src="js/floor.js?v=10"></script>
+<script src="js/floor-ui.js?v=10"></script>
+<script src="js/ui.js?v=11"></script>
+</body>
+</html>

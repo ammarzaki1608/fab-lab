@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Fab Lab — how a chip factory works</title>
+<meta name="description" content="A short course on how a semiconductor fab works: the ten process steps, the data systems, and how yield engineers find a bad machine." />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23211D1A'/><path d='M9 23V9h11M9 16h8' stroke='%23FAF6F1' stroke-width='2.4' fill='none' stroke-linecap='round'/></svg>" />
+<link rel="stylesheet" href="css/style.css?v=10" />
+</head>
+<body>
+<header class="top">
+  <button id="menuBtn" class="menu-btn" aria-label="Course menu">☰</button>
+  <a class="brand" href="#/what-a-fab-does/1"><span class="logo">FL</span>Fab Lab</a>
+  <nav class="topnav">
+    <a class="on" href="#/what-a-fab-does/1">Learn</a>
+    <a href="#glossary" id="glossaryBtn">Glossary</a>
+  </nav>
+  <span class="spacer"></span>
+  <label class="search">
+    <span class="search-icon">⌕</span>
+    <input id="search" type="search" placeholder="Search lessons…" autocomplete="off" />
+    <kbd>Ctrl K</kbd>
+  </label>
+  <div class="tones" id="tones" role="group" aria-label="Colour tone">
+    <span class="micro tones-label">Tone</span>
+    <button class="tone" data-tone="cleanroom" aria-pressed="true" aria-label="Cleanroom tone" title="Cleanroom — cool paper, teal"><i></i></button>
+    <button class="tone" data-tone="moss" aria-pressed="false" aria-label="Moss tone" title="Moss — warm paper, olive"><i></i></button>
+    <button class="tone" data-tone="indigo" aria-pressed="false" aria-label="Indigo tone" title="Indigo — cool grey, indigo"><i></i></button>
+  </div>
+  <span class="chip" id="navProgress" title="lessons finished">0/18</span>
+</header>
+
+<main class="shell">
+  <aside class="sidebar">
+    <div class="side-head">
+      <h1>Course</h1>
+      <span class="muted" id="lessonTotal">18 lessons</span>
+    </div>
+    <div id="course" class="course"></div>
+    <div class="side-foot" id="progressLine"></div>
+  </aside>
+
+  <section class="content">
+    <div class="meta" id="lessonMeta"></div>
+    <h1 id="lessonTitle">Loading…</h1>
+    <figure class="fig">
+      <canvas id="figure" aria-label="Illustration for this lesson"></canvas>
+      <figcaption class="fig-cap"></figcaption>
+    </figure>
+    <div class="foot-row">
+      <span class="crumb" id="crumb"></span>
+      <span class="muted" id="nextHint"></span>
+    </div>
+  </section>
+
+  <aside class="panel">
+    <div class="panel-head">
+      <span class="micro">The idea, one step at a time</span>
+      <span class="micro" id="stepCount"></span>
+    </div>
+    <div class="panel-body" id="stepPanel"></div>
+  </aside>
+</main>
+
+<dialog id="glossary" class="gloss">
+  <div class="gloss-head">
+    <h2>Glossary</h2>
+    <button class="btn ghost small" id="glossClose">Close</button>
+  </div>
+  <dl>
+    <dt>Die</dt><dd>One chip on the wafer. 188 per wafer in this lab.</dd>
+    <dt>Lot</dt><dd>25 wafers that travel and are measured together.</dd>
+    <dt>FOUP</dt><dd>The sealed box a lot travels in.</dd>
+    <dt>CD (critical dimension)</dt><dd>The width of a printed or etched line, in nanometres.</dd>
+    <dt>Metrology</dt><dd>Measuring the product: thickness, CD, resistance. Sampled, not exhaustive.</dd>
+    <dt>FDC</dt><dd>Fault detection: sensors on the tool, compared against a golden trace.</dd>
+    <dt>SPC</dt><dd>Statistical process control: the chart with a centre line and ±3σ limits.</dd>
+    <dt>R2R / APC</dt><dd>Run-to-run control: adjust the next lot's recipe from the last lot's result.</dd>
+    <dt>WIP</dt><dd>Work in progress: lots queued in front of steps.</dd>
+    <dt>Cycle time</dt><dd>Wall-clock time from lot start to sort. ≈ WIP ÷ throughput.</dd>
+    <dt>PM</dt><dd>Preventive maintenance: cleaning or parts that reset a tool's wear.</dd>
+    <dt>Yield</dt><dd>Fraction of dies that pass test.</dd>
+    <dt>Bin</dt><dd>The test verdict for a die: bin 1 passes, the others record why it failed.</dd>
+    <dt>Chamber matching</dt><dd>Keeping twin chambers identical, and reporting every metric per chamber.</dd>
+    <dt>Twin</dt><dd>A second chamber on the same step (ETCH-03A / ETCH-03B).</dd>
+    <dt>Spec vs limit</dt><dd>Spec is what the customer needs; control limits are what the process normally does.</dd>
+  </dl>
+</dialog>
+
+<script src="js/handoff.js?v=1"></script>
+<script src="js/iso.js?v=8"></script>
+<script src="js/content.js?v=9"></script>
+<script src="engine/sim.js?v=1"></script>
+<script src="js/lab.js?v=10"></script>
+</body>
+</html>

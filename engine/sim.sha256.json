@@ -1,0 +1,5 @@
+{
+  "sha256": "e779a41ffc41feee6d66be41d0ada6674bf1d4e2f097a93c733dad992c28976f",
+  "lines": 624,
+  "note": "Recorded when engine/sim.js was made the single copy. Re-record after an intended physics change; both test suites must pass."
+}
