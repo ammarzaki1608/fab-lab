@@ -1,5 +1,13 @@
 # Fab Lab + FabSim
 
+**Live:** [course](https://ammarzaki1608.github.io/fab-lab/) · [instrument](https://ammarzaki1608.github.io/fab-lab/sim/)
+
+A semiconductor fab you can read at lesson speed and then open up and prod. 18 lessons,
+77 steps, 12 of them wired to a live scenario — put a fault into a running fab and watch
+it surface as an SPC point, an FDC alarm, a yield loss, and one guilty chamber.
+
+No account, no backend, no build step: plain HTML, CSS and canvas, served as files.
+
 One tree, two surfaces on one simulation engine:
 
 - **Fab Lab** at `/` — a guided course: 18 lessons in 5 chapters, hand-drawn isometric
