@@ -106,7 +106,13 @@
   // ---------------- handoff to the instrument ----------------
   // The link contract lives in handoff.js so the course and the simulator cannot disagree
   // about parameter names; see that file for what a scenario link carries.
-  const { simHref } = window.FabHandoff;
+  const { simHref, jumpHref } = window.FabHandoff;
+
+  // The instrument is one click from the header, not only from inside a lesson step.
+  for (const [id, kind] of [['#jumpSim', 'sim'], ['#jumpFloor', 'floor']]) {
+    const a = $(id);
+    if (a) a.href = jumpHref(kind);
+  }
 
   // ---------------- right: the step panel ----------------
   function renderStep() {

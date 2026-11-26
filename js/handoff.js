@@ -18,7 +18,7 @@
   const SIM = 'sim/index.html';
   const COURSE = '../index.html';         // as seen from /sim/
   const DEFAULT_SEED = 9;
-  const TABS = ['step', 'spc', 'yield', 'chambers', 'lot', 'data', 'learn'];
+  const TABS = ['step', 'spc', 'yield', 'test', 'chambers', 'lot', 'data', 'learn'];
   const SPEEDS = [0, 1, 2, 3, 4, 5, 6, 7];
 
   /* stepNo is the 1-based number the course puts in its own URL (#/lesson/3). */
@@ -32,9 +32,20 @@
     if (g.autoHold === false) q.set('autoHold', '0');
     if (g.floor) q.set('floor', '1');
     if (g.sel) q.set('sel', g.sel);
+    if (g.atest) q.set('atest', '1');
+    if (g.thr != null) q.set('thr', String(g.thr));
+    if (g.amode) q.set('amode', g.amode);
     q.set('seed', String(g.seed != null ? g.seed : DEFAULT_SEED));
     if (lessonId) q.set('back', `${COURSE}#/${lessonId}/${stepNo || 1}`);
     return `${SIM}?${q}`;
+  }
+
+  /* Two doors from the course straight into the instrument, for a reader who wants to use
+   * the fab before reading about it. Built through simHref so they follow the same URL
+   * contract — and so ?floor=1 always carries the tab it must open with. */
+  const JUMPS = { sim: { tab: 'step' }, floor: { tab: 'step', floor: 1 } };
+  function jumpHref(kind) {
+    return simHref(JUMPS[kind] || JUMPS.sim, null, null);
   }
 
   /* The instrument's side of the same contract: which tab and scenario a URL asks for.
@@ -54,6 +65,9 @@
       autoHold: q.get('autoHold') === '0' || q.get('autoHold') === 'off' ? false : (q.get('autoHold') ? true : null),
       floor: q.get('floor') === '1' || q.get('floor') === 'true',
       sel: q.get('sel') || null,
+      atest: q.get('atest') === '1' || q.get('atest') === 'true' || q.get('atest') === 'on',
+      thr: num(q.get('thr')),
+      amode: ['bin', 'score', 'skipped'].includes(q.get('amode')) ? q.get('amode') : null,
       back: q.get('back') || null,
     };
   }
@@ -64,5 +78,6 @@
     return typeof back === 'string' && /^(\.\.\/|\.\/|\/(?!\/))[^\s]*$/.test(back) ? back : COURSE;
   }
 
-  root.FabHandoff = { SIM, COURSE, DEFAULT_SEED, TABS, SPEEDS, simHref, readScenario, safeBack };
+  root.FabHandoff = { SIM, COURSE, DEFAULT_SEED, TABS, SPEEDS, JUMPS, simHref, jumpHref,
+    readScenario, safeBack };
 })(typeof window !== 'undefined' ? window : globalThis);

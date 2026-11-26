@@ -192,3 +192,25 @@ test('the header exposes the tone switcher and remembers the choice', () => {
   assert.match(labSrc, /Iso\.refresh\(\)/, 'canvas is repainted on switch');
   assert.match(labSrc, /URLSearchParams\(location\.search\)\.get\('tone'\)/, 'a tone can be deep-linked');
 });
+
+test('chapter 06 quotes the test-program numbers the module actually runs', () => {
+  const T = require('../sim/js/testplan.js');
+  const ch = COURSE.find(c => c.no === '06');
+  assert.ok(ch, 'chapter 06 exists');
+  assert.strictEqual(ch.lessons.length, 5);
+  assert.deepStrictEqual(ch.lessons.map(l => l.id),
+    ['test-phases', 'test-program', 'first-silicon', 'test-data', 'ai-in-test']);
+  const text = ch.lessons.flatMap(l => l.steps.flatMap(s => s.body.concat(s.note || ''))).join(' ');
+  assert.match(text, /37\.2 ms/, 'per-die program cost is quoted');
+  assert.match(text, new RegExp(`188 × 37\\.2 ÷ 5`), 'the touches arithmetic is quoted');
+  // the numbers in the copy are the ones the module computes
+  assert.strictEqual(+T.PROGRAM_MS.toFixed(1), 37.2);
+  assert.strictEqual(T.SITES, 5);
+  assert.ok(Math.abs(T.plan(FabSim.DIES.map(d => ({ ...d, rc: 20, vt: 0.45, ioff: 10, idsat: 600, bin: 1 })), {}).timePerWaferS - 1.4) < 0.05);
+  assert.match(text, /5 sites/, 'site count is stated');
+  // both roles named, and named in the phase they actually sit in
+  assert.match(ch.lessons[0].steps[1].note, /graduate test \/ product engineering/i);
+  assert.match(ch.lessons[0].steps[1].note, /production test engineering/i);
+  // the chapter is about roles, not about one employer: no company is named anywhere in it
+  assert.doesNotMatch(text, /\bAMD\b|Micron|Intel\b|TSMC|Samsung\b|Infineon|GlobalFoundries/);
+});

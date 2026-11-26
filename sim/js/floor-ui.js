@@ -20,6 +20,7 @@
     wrap.hidden = true;
     bar = el('div', 'floor-bar');
     bar.innerHTML = `
+      <a id="fvCourse" class="fv-course" href="../index.html" hidden title="Back to the course">&larr; Course</a>
       <b>Fab floor</b>
       <span class="muted">wafers travel as FOUPs on the overhead rail · click a tool for the inside</span>
       <span class="grow"></span>
@@ -108,6 +109,20 @@
     lastSel = null; last = 0;
     syncPause();
     refreshFollow();
+    // The overlay covers the simulator's own header, so it carries its own way home. Same rule
+    // as #courseLink: ?back= wins, otherwise probe once and stay hidden in a standalone copy.
+    {
+      const a = bar.querySelector('#fvCourse');
+      const back = new URLSearchParams(location.search).get('back');
+      if (back) {
+        a.href = root.FabHandoff ? root.FabHandoff.safeBack(back) : '../index.html';
+        a.hidden = false;
+      } else {
+        fetch('../index.html', { method: 'HEAD' })
+          .then(r => { if (r.ok) a.hidden = false; })
+          .catch(() => { /* standalone copy: no course next door */ });
+      }
+    }
     const q = new URLSearchParams(location.search).get('guide');   // ?guide=1 / ?guide=0 overrides first-run
     let seen = false;
     try { seen = !!localStorage.getItem('fabFloorGuide'); } catch (e) { seen = false; }

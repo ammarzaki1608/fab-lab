@@ -181,7 +181,7 @@
   }
 
   // ---------------- tabs ----------------
-  const TABS = ['step', 'spc', 'yield', 'chambers', 'lot', 'data', 'learn'];
+  const TABS = ['step', 'spc', 'yield', 'test', 'chambers', 'lot', 'data', 'learn'];
   function showTab(t) {
     if (!TABS.includes(t)) t = 'step';
     activeTab = t;
@@ -357,6 +357,13 @@
     }
   }
 
+  /* The test floor: arithmetic from testplan.js, view from testui.js.
+   * It needs the engine's die data, so it only works once a lot has been sorted. */
+  function renderTest() {
+    const box = $('#tab-test');
+    FabTestUI.render(box, { S: sim.state, BINS, GRID, DIES, Charts });
+  }
+
   function renderChambers(full) {
     const box = $('#tab-chambers'), S = sim.state;
     const multi = STEPS.filter(s => s.tools.length > 1);
@@ -512,6 +519,7 @@
     if (activeTab === 'step') renderStep(full);
     else if (activeTab === 'spc') renderSpc(full);
     else if (activeTab === 'yield') renderYield(full);
+    else if (activeTab === 'test') renderTest();
     else if (activeTab === 'chambers') renderChambers(full);
     else if (activeTab === 'lot') renderLot(full);
     else if (activeTab === 'data') renderData(full);
@@ -531,7 +539,7 @@
     sim.on(e => { addEvent(e); spawnPacket(e); });
     packets.forEach(p => p.c.remove()); packets = []; evList.innerHTML = '';
     selLot = null; yieldLot = null; selWafer = 0;
-    ['tab-yield', 'tab-lot', 'tab-data', 'tab-spc', 'tab-chambers'].forEach(id => { const b = document.getElementById(id); b.dataset.built = ''; b.innerHTML = ''; });
+    ['tab-yield', 'tab-test', 'tab-lot', 'tab-data', 'tab-spc', 'tab-chambers'].forEach(id => { const b = document.getElementById(id); b.dataset.built = ''; b.innerHTML = ''; });
     renderPanel(true);
   }
   const fs = $('#faultSel');
@@ -589,6 +597,14 @@
     if (!Number.isNaN(sp) && sp >= 0 && sp <= SPEEDS.length - 1) { spd.value = sp; updSpd(); }
     const t = q.get('tab');
     if (t) showTab(t);
+    // ?tab=test&atest=1&thr=2.6&amode=score — the test-floor scenario a lesson hands over
+    if (window.FabTestUI) {
+      FabTestUI.configure({
+        adaptive: q.get('atest') === '1' || q.get('atest') === 'true' || q.get('atest') === 'on' ? true : null,
+        thr: Number.isFinite(Number(q.get('thr'))) && q.get('thr') ? Number(q.get('thr')) : null,
+        mode: q.get('amode'),
+      });
+    }
     // ?floor=1 opens the physical view straight away; ?floor=1&sel=ETCH-03A picks a bay
     if (q.has('floor')) openFloor(q.get('sel'));
 

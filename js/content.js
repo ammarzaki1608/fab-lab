@@ -468,6 +468,123 @@
         },
       ],
     },
+    {
+      no: '06', title: 'Test & product engineering', blurb: 'The job after the fab: prove the part works, then prove it every time, cheaply.',
+      lessons: [
+        {
+          id: 'test-phases', title: 'Six phases, six different jobs', figure: 'phases',
+          steps: [
+            {
+              tag: 'CONCEPT', head: 'A product has a life, not a step',
+              body: ['Everything before this chapter happens to one lot at a time. A <b>product</b> is different: it is designed once, brought to life once, characterised once, then manufactured five million times. Test engineers live across that whole arc — which is why two job adverts with the same words can be completely different jobs.'],
+            },
+            {
+              tag: 'CONCEPT', head: 'The six phases, and who stands in each',
+              body: ['<b>Design</b> (RTL, scan insertion, DFT) → <b>bring-up</b> (first silicon, debug the patterns) → <b>characterisation</b> (shmoo, corners, guardbands) → <b>production test</b> (the test program that runs forever) → <b>ramp and HVM</b> (yield, excursions, cost) → <b>returns</b> (RMA, failure analysis, back to design).'],
+              note: 'A <b>graduate test / product engineering</b> role sits at bring-up and characterisation: validate test conditions, methodology and content on first silicon, analyse failures, optimise the patterns. A <b>production test engineering</b> role at a memory maker sits at production test and ramp: own the test program for HVM, cut test time, and mine the test data with AI/ML. Same vocabulary, opposite end of the timeline.',
+            },
+            {
+              tag: 'DATA', head: 'What actually changes between them',
+              body: ['Bring-up answers <b>“does this design work at all, and under what conditions?”</b> — a handful of parts, thousands of measurements, no labels yet. Production test answers <b>“does this part work, in 4 seconds, for the next two years?”</b> — millions of parts, one verdict each, and a cost target per second.'],
+            },
+            {
+              tag: 'WHY', head: 'Why the AI skills transfer, and why they do not transfer for free',
+              body: ['Python, statistics and pattern recognition are the same. But bring-up data is <b>small, hand-labelled and non-stationary</b> (yesterday\'s part is a different design), while production data is <b>huge, unlabelled and drifting</b> (every part is nominally identical, and that is the trap). A model that shines on one is usually naive on the other.'],
+            },
+          ],
+        },
+        {
+          id: 'test-program', title: 'A test program is a program', figure: 'tester',
+          steps: [
+            {
+              tag: 'CONCEPT', head: 'A probe card touches 5 dies at once',
+              body: ['At wafer sort the wafer sits on a stage under a <b>probe card</b>: one set of needles per die, so a <b>site</b> tests one die at a time and five sites test five dies in parallel. A 188-die wafer is 38 touches, not 188. Everything about test cost is really about that number.'],
+            },
+            {
+              tag: 'CONCEPT', head: 'The program is an ordered list of tests',
+              body: ['Each entry: a condition (voltage, temperature, timing), a measurement, a <b>limit</b>, and the <b>bin</b> a failure assigns. Continuity → Vt → Idsat → Ioff → scan/functional. Order matters: cheap tests first, because a die that fails continuity never needs the expensive one.'],
+              note: 'A bin is not a number, it is a disposal decision: bin 1 ships, bin 2–4 are parametric fails (some can be sold down a speed grade), bin 5 is a kill, bin 6 is contact — the probe card, not the die.'
+            },
+            {
+              tag: 'DATA', head: 'The arithmetic of test time',
+              body: ['In the simulator: 188 dies per wafer, 5 sites, and a program of 3.2 + 6.5 + 8.0 + 5.5 + 14.0 = 37.2 ms per die. That is 188 × 37.2 ÷ 5 ≈ <b>1.4 s of touch time per wafer</b>, plus handling. Cut one test by 2 ms and you save 75 ms a wafer — which at a million wafers is 21 hours of tester time.'],
+            },
+            {
+              tag: 'TRY', head: 'Read the program, then move the slider',
+              go: {"label": "Open the test floor", "tab": "test", "speed": 7},
+              body: ['The new <b>Test floor</b> tab runs that program on a sorted wafer: per-test pass/fail, the bin of every die, and the time it took. Then switch on adaptive test and watch what happens to test time — and to the parts you let through.'],
+            },
+          ],
+        },
+        {
+          id: 'first-silicon', title: 'First silicon: the job is to find the bug', figure: 'shmoo',
+          steps: [
+            {
+              tag: 'CONCEPT', head: 'Nothing is known yet, so nothing can be assumed',
+              body: ['On first silicon there is no known-good part to compare against. The tester is running patterns that were written from a simulation, on a design that has never been manufactured. So bring-up is not measurement — it is <b>search</b>: does it power up, does the scan chain shift, does it fail at all corners or one?'],
+            },
+            {
+              tag: 'DATA', head: 'The shmoo plot is the instrument',
+              body: ['Sweep two conditions and colour the pass/fail grid: voltage down one axis, frequency up the other. The shape of the boundary is the answer. A clean diagonal edge means the part is working as designed and running out of timing margin. A hole in the middle or a ragged edge means a real defect — and its shape usually names the circuit.'],
+            },
+            {
+              tag: 'CONCEPT', head: 'Characterisation writes the guardband',
+              body: ['Production needs one number per die, not a map. So characterisation turns the boundary into limits with margin: the shipping window in the figure is deliberately inside the pass region, because parts drift with temperature, age and supplier. That margin is a decision, and it costs yield — which is why it gets argued over.'],
+            },
+            {
+              tag: 'CONCEPT', head: 'Bench gear is part of the job',
+              body: ['This is where the oscilloscope, logic analyser and voltmeter in a test-engineering job advert come from: when a scan pattern fails on silicon but passes in simulation, you probe the board, not the database. Python is used to automate the sweeps and parse the logs — not to replace the probe.'],
+            },
+          ],
+        },
+        {
+          id: 'test-data', title: 'Every die is a row', figure: 'wafer',
+          steps: [
+            {
+              tag: 'CONCEPT', head: 'Sort output is a table, not a picture',
+              body: ['The tester writes <b>STDF</b>: one record per die, one column per test, plus the wafer and die coordinates. A wafer is ~188 rows; a lot is ~4,700; a year of one product is billions. The wafer map is just that table, reshaped.'],
+            },
+            {
+              tag: 'DATA', head: 'The join is what makes it valuable',
+              body: ['Each die carries its lot and wafer ID, and the lot carries its <b>traveler</b> — every tool and chamber that touched it. Join test data to process history and you can ask the only question that pays: which machine made the failing dies? That join is why the fab spends so much effort on ID tracking.'],
+            },
+            {
+              tag: 'CONCEPT', head: 'Attribute data and variable data are different problems',
+              body: ['<b>Attribute</b>: pass/fail, a bin. <b>Variable</b>: the measured value, continuous. Bins are easy to count and hide everything; parametrics are noisy but carry the trend. Most beginner mistakes come from modelling bins and then wondering why the model cannot say <i>why</i>.'],
+            },
+            {
+              tag: 'TRY', head: 'Look at the same wafer three ways',
+              go: {"label": "Open it: bins, then score", "tab": "test", "speed": 7, "amode": "score", "fault": "padScratch"},
+              body: ['In the test floor, switch the map between <b>bins</b>, <b>score</b> (distance from the healthy centre) and <b>skipped</b> (what adaptive test let go). Same 188 dies, three completely different pictures — and only the third one is about money.'],
+            },
+          ],
+        },
+        {
+          id: 'ai-in-test', title: 'Where AI helps, and where it lies', figure: 'chart',
+          steps: [
+            {
+              tag: 'DATA', head: 'Four things ML genuinely does here',
+              body: ['<b>1.</b> Wafer-map pattern recognition: classify the shape (edge ring, centre blob, scratch, random) in milliseconds instead of an engineer\'s afternoon. <b>2.</b> Anomaly detection on parametrics: flag a die or a lot that is inside limits but unlike its neighbours. <b>3.</b> Fail-signature clustering: group dies that fail the same way, so one root cause covers 400 parts. <b>4.</b> Adaptive test: predict which tests a die can safely skip.'],
+            },
+            {
+              tag: 'CONCEPT', head: 'Prediction is cheap; a decision is not',
+              body: ['A model that outputs a risk score is harmless. A model that <b>skips a test</b>, or gates a shipment, is a manufacturing decision with an escape cost attached. That is why the job adverts keep repeating “evaluate”, “validate”, “responsible use” and “engineering judgement” — the hard part is not the model, it is the threshold and who signs for it.'],
+            },
+            {
+              tag: 'WHY', head: 'The four ways these models lie',
+              body: ['<b>Drift</b>: the fab changes, the model does not — train on January, run in June, and it silently misses a new mechanism. <b>Skew</b>: trained on shipped (passing) parts, so it has never seen a real fail. <b>Leakage</b>: the feature quietly encodes the answer, e.g. the tool ID of the chamber that happens to be broken this month. <b>Threshold</b>: tuned on last quarter\'s data, never re-checked against escapes.'],
+              note: 'The honest test of a test-engineering model is not accuracy — it is <b>escapes per million parts at a fixed test-time budget</b>, measured on parts it has never seen.'
+            },
+            {
+              tag: 'TRY', head: 'Turn it on and count the escapes',
+              go: {"label": "Run it: adaptive test on", "tab": "test", "speed": 7, "atest": 1, "thr": 2.6,
+                "hint": "Watch test time fall, then watch escapes appear. Move the threshold until both are acceptable — that trade-off is the job."},
+              body: ['In the test floor, adaptive test skips the remaining tests for dies whose running score is below the threshold. Lower the threshold and you test more (costlier, safer); raise it and you ship parts you never measured. Every setting is a position on that curve — there is no free one.'],
+            },
+          ],
+        },
+      ],
+    },
   ];
 
   // flatten for routing and progress

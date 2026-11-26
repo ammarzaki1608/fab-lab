@@ -87,3 +87,20 @@ test('readScenario ignores junk instead of trusting it', () => {
   assert.strictEqual(j.r2r, true, 'anything truthy that is not 0/off means "on"');
   assert.strictEqual(H.readScenario('').floor, false);
 });
+
+test('the instrument is one click from the course header, not only from a lesson', () => {
+  const read = f => require('node:fs').readFileSync(path.join(__dirname, '..', f), 'utf8');
+  const html = read('index.html');
+  for (const id of ['jumpSim', 'jumpFloor']) {
+    assert.match(html, new RegExp(`id="${id}"`), `the header has no #${id} pill`);
+  }
+  // both doors are built by the shared contract, so the parameter names cannot drift
+  assert.match(read('js/lab.js'), /jumpHref\('sim'\)|jumpHref\(kind\)/, 'lab.js does not wire the pills');
+  const floor = H.jumpHref('floor');
+  assert.match(floor, /^sim\/index\.html\?/, 'a jump link must stay inside the tree, relative');
+  const q = H.readScenario(floor.split('?')[1]);
+  assert.strictEqual(q.floor, true, 'the floor pill does not ask for the floor');
+  assert.ok(q.tab, '?floor=1 needs an explicit tab or the overlay opens on an arbitrary one');
+  assert.strictEqual(H.readScenario(H.jumpHref('sim').split('?')[1]).floor, false, 'the simulator pill opens the floor');
+  assert.strictEqual(H.jumpHref('nonsense'), H.jumpHref('sim'), 'an unknown jump should fall back, not throw');
+});

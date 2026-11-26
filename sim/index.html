@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>FabSim — Semiconductor Fab & Data-Flow Simulator</title>
-<link rel="stylesheet" href="css/style.css?v=11">
+<link rel="stylesheet" href="css/style.css?v=12">
 </head>
 <body>
 <header>
@@ -52,6 +52,7 @@
       <button data-tab="step" class="on">Step detail</button>
       <button data-tab="spc">SPC charts</button>
       <button data-tab="yield">Wafer maps &amp; yield</button>
+      <button data-tab="test">Test floor (ATE)</button>
       <button data-tab="chambers">Chambers</button>
       <button data-tab="lot">Lot traveler</button>
       <button data-tab="data">Dataset</button>
@@ -60,6 +61,7 @@
     <div id="tab-step" class="tab on"></div>
     <div id="tab-spc" class="tab"></div>
     <div id="tab-yield" class="tab"></div>
+    <div id="tab-test" class="tab"></div>
     <div id="tab-chambers" class="tab"></div>
     <div id="tab-lot" class="tab"></div>
     <div id="tab-data" class="tab"></div>
@@ -76,9 +78,11 @@
 <div id="tip" class="tip"></div>
 <script src="../js/handoff.js?v=1"></script>
 <script src="../engine/sim.js?v=1"></script>
-<script src="js/charts.js?v=10"></script>
+<script src="js/charts.js?v=11"></script>
+<script src="js/testplan.js?v=2"></script>
 <script src="js/floor.js?v=10"></script>
-<script src="js/floor-ui.js?v=10"></script>
-<script src="js/ui.js?v=11"></script>
+<script src="js/floor-ui.js?v=11"></script>
+<script src="js/testui.js?v=9"></script>
+<script src="js/ui.js?v=12"></script>
 </body>
 </html>

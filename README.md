@@ -2,25 +2,30 @@
 
 **Live:** [course](https://ammarzaki1608.github.io/fab-lab/) · [instrument](https://ammarzaki1608.github.io/fab-lab/sim/)
 
-A semiconductor fab you can read at lesson speed and then open up and prod. 18 lessons,
-77 steps, 12 of them wired to a live scenario — put a fault into a running fab and watch
-it surface as an SPC point, an FDC alarm, a yield loss, and one guilty chamber.
+A semiconductor fab you can read at lesson speed and then open up and prod. 23 lessons,
+97 steps, 12 of them wired to a live scenario — put a fault into a running fab and watch
+it surface as an SPC point, an FDC alarm, a yield loss, and one guilty chamber. The last
+chapter is about the jobs that do that on purpose: product and test engineering, and the
+adaptive test program the instrument will run on real dies for you.
 
 No account, no backend, no build step: plain HTML, CSS and canvas, served as files.
 
 One tree, two surfaces on one simulation engine:
 
-- **Fab Lab** at `/` — a guided course: 18 lessons in 5 chapters, hand-drawn isometric
+- **Fab Lab** at `/` — a guided course: 23 lessons in 6 chapters, hand-drawn isometric
   figures, live demos, one idea per screen.
 - **FabSim** at `/sim/` — the instrument: live flow, SPC charts, chamber matching,
-  wafer maps, the fab floor, CSV export.
+  wafer maps, the fab floor, a wafer-sort test floor, CSV export.
 
 They are joined by a link contract (`js/handoff.js`) and by a single copy of the engine
 (`engine/sim.js`), not by a build step. No dependencies, no bundler: plain HTML, CSS, JS.
+You do not have to read the course to use the instrument: the header carries two doors,
+**Simulator ↗** and **Fab floor ↗**, live on every page. The floor overlay carries its own
+**← Course** link, because it covers the instrument's header.
 
 ```
 python3 serve.py 8092 .    # course at /, simulator at /sim/
-npm test                   # 54 tests: course, figures, engine invariants, handoff links
+npm test                   # 64 tests: course, figures, engine invariants, handoff links, test plan
 ```
 
 `serve.py` is a static server that adds `Cache-Control: no-store`, so edits show up on
@@ -45,20 +50,21 @@ then the number that makes it concrete, then what goes wrong. Two things keep it
 ```
 index.html
 css/style.css      design tokens (3 tones), three-pane shell, figure frame
-js/iso.js          isometric canvas figures: pile, flow, wafer, twins, layers, chart, foup
-js/content.js      the course: COURSE + 18 LESSONS, each a list of steps
+js/iso.js          isometric canvas figures: pile, flow, wafer, twins, layers, chart, foup, phases, tester, shmoo
+js/content.js      the course: COURSE + 23 LESSONS, each a list of steps
 js/lab.js          hash router, sidebar, step panel, live demos, tone switcher
 js/handoff.js      the link contract: lesson step <-> simulator scenario
 engine/sim.js      the process engine — the only copy in the tree
 engine/sim.sha256.json  its recorded hash, so a silent second copy fails a test
 sim/index.html     FabSim (the instrument), unchanged except for the handoff
-sim/js/*           ui, charts, floor, floor-ui
+sim/js/*           ui, charts, floor, floor-ui, testplan (the ATE program), testui
 sim/css/style.css  the instrument's own dark palette
 serve.py           dev server with no-store, serves the whole tree
 test/content.test.js   course and palette are data: checked as data
 test/render.test.js    every figure drawn into a mock canvas and measured
 test/engine.test.js    one engine, one copy, both apps point at it
 test/handoff.test.js   every scenario link names a real fault, tab and speed
+test/testplan.test.js  the test program: bins match the engine, skips save time, escapes counted
 sim/test/*.test.js     the engine's own behaviour and the floor geometry
 ```
 
@@ -114,11 +120,12 @@ disagree about parameter names:
 | parameter | what it does |
 |---|---|
 | `fault` | inject a fault on load (`etchSeason`, `furnaceDrift`, `focusDrift`, `beamUnstable`, `particles`, `padScratch`) |
-| `tab` | open a tab (`step`, `spc`, `yield`, `chambers`, `lot`, `data`, `learn`) |
+| `tab` | open a tab (`step`, `spc`, `yield`, `test`, `chambers`, `lot`, `data`, `learn`) |
 | `speed` | 0–7, the instrument's speed slider |
 | `r2r=0`, `autoHold=0` | preset the control loops off |
 | `floor=1`, `sel=ETCH-03A` | open the fab-floor overlay, optionally on one bay |
 | `seed` | pin the run so a lesson reproduces the same numbers every time |
+| `atest=1`, `thr=1.6`, `amode=bin\|score\|skipped` | the test floor: adaptive test on, its threshold, and which map it draws |
 | `back` | where "← Course" returns to (same-site relative only) |
 
 Twelve lesson steps carry a copper button that opens the scenario the paragraph just
